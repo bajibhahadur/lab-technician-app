@@ -1,0 +1,105 @@
+<div class="container mt-4 no-print">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-outline-secondary" (click)="goBack()">← Back to Patients</button>
+    <button class="btn btn-primary" *ngIf="patient" (click)="enterNewTest()">+ New Test</button>
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div *ngIf="patient" class="row">
+    <div class="col-md-3 no-print">
+      <div class="card shadow mb-3">
+        <div class="card-header bg-light"><strong>Test History</strong></div>
+        <div class="list-group list-group-flush">
+          <div *ngIf="testResults.length === 0" class="text-muted p-3 text-center">No tests yet.</div>
+          <button *ngFor="let result of testResults"
+                  class="list-group-item list-group-item-action"
+                  [class.active]="selectedResult?.id === result.id"
+                  (click)="selectResult(result)">
+            <div class="fw-bold">{{ result.testType?.name }}</div>
+            <small>{{ result.testDate | date:'mediumDate' }}</small>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div *ngIf="selectedResult" class="card shadow lab-report" id="printable-report">
+        <!-- Lab Header -->
+        <div class="card-body">
+          <div class="text-center lab-header mb-4">
+            <h3 class="text-primary fw-bold mb-1">🏥 CityMed Diagnostic Lab</h3>
+            <p class="mb-0 text-muted">123 Health Street, Medical District | Phone: +1 (555) 123-4567</p>
+            <p class="mb-0 text-muted">Email: info@citymedlab.com | www.citymedlab.com</p>
+            <hr class="border-primary border-2">
+            <h4 class="text-uppercase text-secondary">Laboratory Test Report</h4>
+          </div>
+
+          <!-- Patient Info -->
+          <div class="row patient-info mb-4">
+            <div class="col-6">
+              <table class="table table-sm table-borderless">
+                <tr><td class="fw-bold text-muted" style="width:140px">Patient Name:</td><td>{{ patient.name }}</td></tr>
+                <tr><td class="fw-bold text-muted">Age / Gender:</td><td>{{ patient.age }} Years / {{ patient.gender }}</td></tr>
+              </table>
+            </div>
+            <div class="col-6">
+              <table class="table table-sm table-borderless">
+                <tr><td class="fw-bold text-muted" style="width:120px">Report Date:</td><td>{{ selectedResult.testDate | date:'mediumDate' }}</td></tr>
+                <tr><td class="fw-bold text-muted">Report No:</td><td>RPT-{{ (selectedResult.id ?? 0).toString().padStart(5, '0') }}</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Test Name -->
+          <div class="alert alert-primary text-center py-2 mb-4">
+            <h5 class="mb-0 fw-bold">{{ selectedResult.testType?.name }}</h5>
+          </div>
+
+          <!-- Results Table -->
+          <table class="table table-bordered results-table">
+            <thead class="table-dark">
+              <tr>
+                <th>Parameter</th>
+                <th>Result</th>
+                <th>Reference Range</th>
+                <th>Unit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of selectedResult.items">
+                <td class="fw-bold">{{ item.testParameter?.name }}</td>
+                <td class="fw-bold text-danger">{{ item.value }}</td>
+                <td class="text-success">{{ item.testParameter?.referenceRange }}</td>
+                <td class="text-muted">{{ item.testParameter?.unit }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Footer -->
+          <div class="row mt-4">
+            <div class="col-6">
+              <p class="text-muted small">* This report is computer-generated and valid without signature.</p>
+              <p class="text-muted small">* Results are based on samples provided by the patient.</p>
+            </div>
+            <div class="col-6 text-end">
+              <div class="border-top border-dark mt-5 pt-2 d-inline-block" style="min-width:200px">
+                <p class="mb-0 fw-bold">Lab Technician</p>
+                <p class="text-muted small">CityMed Diagnostic Lab</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="testResults.length === 0" class="card shadow p-5 text-center text-muted">
+        <h5>No test results found for this patient.</h5>
+        <button class="btn btn-primary mt-3" (click)="enterNewTest()">Enter Test Results</button>
+      </div>
+
+      <div *ngIf="selectedResult" class="text-center mt-3 no-print">
+        <button class="btn btn-success btn-lg" (click)="printReport()">🖨️ Print Report</button>
+      </div>
+    </div>
+  </div>
+</div>

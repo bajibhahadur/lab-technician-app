@@ -1,0 +1,63 @@
+<div class="container mt-4">
+  <button class="btn btn-outline-secondary mb-3" (click)="goBack()">← Back to Patients</button>
+
+  <div *ngIf="patient" class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Enter Test Results</h5>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-3"><strong>Patient:</strong> {{ patient.name }}</div>
+        <div class="col-md-2"><strong>Age:</strong> {{ patient.age }}</div>
+        <div class="col-md-2"><strong>Gender:</strong> {{ patient.gender }}</div>
+        <div class="col-md-3"><strong>Date:</strong> {{ patient.date | date:'mediumDate' }}</div>
+      </div>
+
+      <h6 class="text-muted mb-3">Select Test Type:</h6>
+      <div class="row g-2 mb-4">
+        <div class="col-md-4 col-sm-6" *ngFor="let testType of testTypes">
+          <div class="card test-type-card"
+               [class.selected]="selectedTestType?.id === testType.id"
+               (click)="selectTestType(testType)" style="cursor:pointer">
+            <div class="card-body text-center py-3">
+              <div class="test-icon mb-2">🧪</div>
+              <div class="fw-bold">{{ testType.name }}</div>
+              <small class="text-muted">{{ testType.parameters.length }} parameters</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="selectedTestType" class="mt-3">
+        <div *ngIf="message" class="alert alert-success">{{ message }}</div>
+        <h5 class="mb-3">{{ selectedTestType.name }} Parameters</h5>
+        <table class="table table-bordered">
+          <thead class="table-primary">
+            <tr>
+              <th>Parameter</th>
+              <th>Reference Range</th>
+              <th>Unit</th>
+              <th>Result Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let param of selectedTestType.parameters">
+              <td class="fw-bold">{{ param.name }}</td>
+              <td class="text-success">{{ param.referenceRange }}</td>
+              <td class="text-muted">{{ param.unit }}</td>
+              <td>
+                <input type="text" class="form-control form-control-sm"
+                       [(ngModel)]="resultValues[param.id]"
+                       [name]="'param_' + param.id"
+                       placeholder="Enter value">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn btn-success" (click)="submitResults()" [disabled]="submitting">
+          {{ submitting ? 'Saving...' : 'Save Test Results' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

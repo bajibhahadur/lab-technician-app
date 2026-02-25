@@ -9,6 +9,9 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { PatientFormComponent } from './patient-form/patient-form.component';
+import { TestEntryComponent } from './test-entry/test-entry.component';
+import { ReportViewComponent } from './report-view/report-view.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,10 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
-    FetchDataComponent
+    FetchDataComponent,
+    PatientFormComponent,
+    TestEntryComponent,
+    ReportViewComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -26,9 +32,13 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'patients', component: PatientFormComponent },
+      { path: 'test-entry/:id', component: TestEntryComponent },
+      { path: 'report/:id', component: ReportViewComponent },
     ])
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
